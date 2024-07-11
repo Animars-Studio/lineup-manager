@@ -1,0 +1,31 @@
+scalar DateTime
+
+type Error {
+  message: String!
+}
+
+type CustomError {
+  error: Error
+}
+
+type User {
+  id: ID!
+  email: String!
+  username: String
+  isConfirmed: Boolean
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+union UserResult = User | CustomError
+
+type Query {
+  hello: String
+}
+
+type Mutation {
+  login(username: String!, password: String!): String
+  signup(email: String!, password: String!): UserResult
+  confirmSignup(username: String!, code: String!): String
+  resendConfirmationCode(username: String!): String
+}

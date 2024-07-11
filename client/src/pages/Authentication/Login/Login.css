@@ -1,0 +1,20 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.ion-card {
+    padding: 5%;
+    width: 50%;
+    min-width: 700px;
+    max-width: 800px;
+    /* Optional max width for better responsiveness */
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}

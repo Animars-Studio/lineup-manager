@@ -1,0 +1,32 @@
+# Query
+
+# Mutation
+mutation Signup($email: String!, $password: String!) {
+  signup(email: $email, password: $password) {
+    ... on User {
+      id
+      email
+      username
+      isConfirmed
+      createdAt
+      updatedAt
+    }
+    ... on CustomError {
+      error {
+        message
+      }
+    }
+  }
+}
+
+mutation Login($username: String!, $password: String!) {
+  login(username: $username, password: $password)
+}
+
+mutation ConfirmSignup($username: String!, $code: String!) {
+  confirmSignup(username: $username, code: $code)
+}
+
+mutation ResendConfirmationCode($username: String!) {
+  resendConfirmationCode(username: $username)
+}

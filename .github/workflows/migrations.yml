@@ -1,0 +1,62 @@
+name: DB Migrations
+
+on:
+  push:
+    branches:
+      - '**'
+
+jobs:
+  migrations:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: cd server && yarn 
+
+      - name: Set up AWS CLI
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1 
+
+      - name: List all secrets (for debugging purposes)
+        run: |
+            echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}"
+            echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+            echo "RDS_DB_USER=${{ secrets.RDS_DB_USER }}"
+            echo "RDS_DB_PASSWORD=${{ secrets.RDS_DB_PASSWORD }}"
+            echo "RDS_DB_HOST=${{ secrets.RDS_DB_HOST }}"
+            echo "RDS_DB_PORT=${{ secrets.RDS_DB_PORT }}"
+            echo "RDS_DB_NAME=${{ secrets.RDS_DB_NAME }}"
+            echo "AM_IS_OFFLINE=${{ secrets.AM_IS_OFFLINE }}"
+            echo "NODE_ENV=${{ secrets.NODE_ENV }}"
+
+      - name: Export secrets to Github environment variables
+        run: |
+            echo "DB_USER=${{ secrets.RDS_DB_USER }}" >> $GITHUB_ENV
+            echo "DB_PASSWORD=${{ secrets.RDS_DB_PASSWORD }}" >> $GITHUB_ENV
+            echo "DB_HOST=${{ secrets.RDS_DB_HOST }}" >> $GITHUB_ENV
+            echo "DB_PORT=${{ secrets.RDS_DB_PORT }}" >> $GITHUB_ENV
+            echo "DB_NAME=${{ secrets.RDS_DB_NAME }}" >> $GITHUB_ENV
+            echo "AM_IS_OFFLINE=false" >> $GITHUB_ENV
+            echo "NODE_ENV=dev" >> $GITHUB_ENV
+
+      - name: Log environment variables
+        run: |
+            echo "DB_USER=$DB_USER"
+            echo "DB_PASSWORD=$DB_PASSWORD"
+            echo "DB_HOST=$DB_HOST"
+            echo "DB_PORT=$DB_PORT"
+            echo "DB_NAME=$DB_NAME"
+
+      - name: Run Drizzle migrations
+        run: cd server && yarn migrations:run:dev

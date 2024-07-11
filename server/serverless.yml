@@ -1,0 +1,73 @@
+service: apollo-lambda
+
+app: petwalk-socialhub
+org: asuramedia
+
+provider:
+  name: aws
+  runtime: nodejs16.x
+  region: us-east-1
+  stage: ${opt:stage, 'dev'}
+  httpApi:
+    cors: true
+  environment:
+    NODE_ENV: ${self:provider.stage}
+    DB_USER: ${self:custom.databaseCredentials.username}
+    DB_PASSWORD: ${self:custom.databaseCredentials.password}
+    DB_HOST: ${self:custom.databaseCredentials.host}
+    DB_PORT: ${self:custom.databaseCredentials.port}
+    DB_NAME: ${self:custom.databaseCredentials.dbname}
+    AM_IS_OFFLINE: ${self:custom.isOffline}
+    
+functions:
+  graphql:
+    handler: dist/index.graphqlHandler
+    events:
+      - httpApi:
+          path: /
+          method: POST
+      - httpApi:
+          path: /
+          method: GET
+
+plugins:
+  - serverless-offline
+  - serverless-plugin-scripts
+
+custom:
+  esbuild:
+    bundle: true
+    minify: true
+    sourcemap: false
+    exclude: ['aws-sdk']
+    target: 'node16'
+    platform: 'node'
+    concurrency: 10
+  #scripts:
+    #hooks:
+      #'before:deploy:deploy': npm run migrations:run:dev
+
+  isOffline: ${env:AM_IS_OFFLINE, "false"}
+  offlineConfig:
+    true:
+      databaseCredentials:
+        username: ${env:DB_USER}
+        password: ${env:DB_PASSWORD}
+        host: ${env:DB_HOST}
+        port: ${env:DB_PORT}
+        dbname: ${env:DB_NAME}
+    false:
+      databaseCredentials: ${ssm:/${self:provider.stage}/db/credentials}
+  databaseCredentials: ${self:custom.offlineConfig.${self:custom.isOffline}.databaseCredentials}
+
+package:
+  exclude:
+    - .git/**
+    - .vscode/**
+    - .DS_Store
+    - .npmignore
+    - README.md
+    - LICENSE
+    - test/**
+    - coverage/**
+    - node_modules/aws-sdk/**
