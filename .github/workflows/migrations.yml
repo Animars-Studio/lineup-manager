@@ -3,7 +3,7 @@ name: DB Migrations
 on:
   push:
     branches:
-      - '**'
+      - develop
 
 jobs:
   migrations:
