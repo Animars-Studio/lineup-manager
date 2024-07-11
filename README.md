@@ -1,4 +1,3 @@
-# aws-cognito-auth-module
+# lineup-manager
 
-    ## An auth module based on JWT and using AWS Cognito User Pools to manage
-    ## user authentication, confirmation and token validation.
+    ## An application to manage your sports lineup and share it with the team
