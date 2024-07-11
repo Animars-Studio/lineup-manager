@@ -1,6 +1,6 @@
 service: apollo-lambda
 
-app: petwalk-socialhub
+app: lineup-manager
 org: asuramedia
 
 provider:
