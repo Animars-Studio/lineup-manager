@@ -8,6 +8,10 @@ type CustomError {
   error: Error
 }
 
+type GenericResult {
+  result: String
+}
+
 type User {
   id: ID!
   email: String!
@@ -17,15 +21,16 @@ type User {
   updatedAt: DateTime
 }
 
-union UserResult = User | CustomError
+union CustomGraphQlResult = GenericResult | CustomError
+union SignupResult = User | CustomError
 
 type Query {
   hello: String
 }
 
 type Mutation {
-  login(username: String!, password: String!): String
-  signup(email: String!, password: String!): UserResult
-  confirmSignup(username: String!, code: String!): String
-  resendConfirmationCode(username: String!): String
+  login(username: String!, password: String!): CustomGraphQlResult
+  signup(email: String!, password: String!): SignupResult
+  confirmSignup(username: String!, code: String!): CustomGraphQlResult
+  resendConfirmationCode(username: String!): CustomGraphQlResult
 }

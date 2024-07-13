@@ -17,7 +17,6 @@ config();
 
 import { typeResolvers } from "./typeResolvers";
 import { AuthFeature } from "./features/authFeature";
-import { UserService } from "./services/userService";
 
 type ParentType = {};
 type ContextType = {};
@@ -37,12 +36,6 @@ const resolvers: Resolvers = {
   ...typeResolvers,
   Query: {
     hello: async (parent, args, context, info) => {
-      console.log("hello query called with args:", args, context, info);
-      await UserService.getInstance().createUser({
-        email: "test@email",
-        password: "pass1234",
-        username: "testuser",
-      });
       return "Hello, World!";
     },
   },

@@ -1,6 +1,18 @@
 # Query
 
-# Mutation
+# Fragments
+fragment CustomGraphQlResult on CustomGraphQlResult {
+  ... on GenericResult {
+    result
+  }
+  ... on CustomError {
+    error {
+      message
+    }
+  }
+}
+
+# Mutations
 mutation Signup($email: String!, $password: String!) {
   signup(email: $email, password: $password) {
     ... on User {
@@ -20,13 +32,19 @@ mutation Signup($email: String!, $password: String!) {
 }
 
 mutation Login($username: String!, $password: String!) {
-  login(username: $username, password: $password)
+  login(username: $username, password: $password) {
+    ...CustomGraphQlResult
+  }
 }
 
 mutation ConfirmSignup($username: String!, $code: String!) {
-  confirmSignup(username: $username, code: $code)
+  confirmSignup(username: $username, code: $code) {
+    ...CustomGraphQlResult
+  }
 }
 
 mutation ResendConfirmationCode($username: String!) {
-  resendConfirmationCode(username: $username)
+  resendConfirmationCode(username: $username) {
+    ...CustomGraphQlResult
+  }
 }

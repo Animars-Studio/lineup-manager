@@ -123,6 +123,7 @@ export class CognitoService {
     return new Promise((resolve, reject) => {
       cognitoUser.confirmRegistration(code, true, (err, result) => {
         if (err) {
+          console.log("Error confirming signup:", err);
           reject(err.message || JSON.stringify(err));
           return;
         }
@@ -145,7 +146,8 @@ export class CognitoService {
           reject(err.message || JSON.stringify(err));
           return;
         }
-        resolve(result);
+        console.log("Confirmation code resent", result);
+        resolve("Confirmation code resent");
       });
     });
   }
