@@ -4,6 +4,7 @@
   "description": "Apollo server using AWS Lambda",
   "main": "src/index.js",
   "scripts": {
+    "analyze": "esbuild --bundle src/index.ts --outdir=dist --metafile=meta.json && esbuild-analyzer meta.json",
     "build": "tsc && cp src/schema.graphql dist/",
     "start": "yarn generate && yarn build && serverless offline",
     "start:dev": "export AM_IS_OFFLINE=true && nodemon",
@@ -51,6 +52,7 @@
     "eslint-plugin-no-floating-promise": "^2.0.0",
     "eslint-plugin-promise": "^6.2.0",
     "nodemon": "^3.1.3",
+    "serverless-esbuild": "^1.52.1",
     "serverless-plugin-scripts": "^1.0.2",
     "serverless-webpack": "^5.14.1",
     "ts-node": "^10.9.2",

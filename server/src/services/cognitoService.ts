@@ -10,8 +10,6 @@ import {
   GroupType,
   ListGroupsCommand,
 } from "@aws-sdk/client-cognito-identity-provider";
-import { CognitoGroup } from "../generated/graphql";
-import { Error } from "aws-sdk/clients/servicecatalog";
 
 export type CognitoServiceSignUpArgs = {
   email: string;
@@ -50,7 +48,7 @@ export class CognitoService {
     };
     this.userPool = new CognitoUserPool(poolData);
     this.identityProvider = new CognitoIdentityProviderClient({
-      region: process.env.AWS_REGION,
+      region: process.env.COGNITO_REGION,
     });
   }
 
@@ -168,7 +166,9 @@ export class CognitoService {
       UserPoolId: process.env.COGNITO_USER_POOL_ID,
     });
     try {
+      console.log("Listing groups with user pool id:", process.env.COGNITO_USER_POOL_ID);
       const response = await this.identityProvider.send(command);
+      console.log("List groups response:", response);
       return response.Groups ?? [];
     } catch (error) {
       console.error("Error listing groups:", error);
