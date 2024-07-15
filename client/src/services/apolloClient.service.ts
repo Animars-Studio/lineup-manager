@@ -6,7 +6,6 @@ export class ApolloClientService {
     constructor() { }
 
     static getInstance(serverUri?:string) {
-        console.log('ApolloClientService url: ', serverUri)
 
         if (!ApolloClientService.instance && !serverUri) {
             throw new Error('Must provide initial uri for Apollo Server')

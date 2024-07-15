@@ -1,47 +1,47 @@
 import { gql } from "@apollo/client";
-import {  IConfirmationCodeResponse, VerifyCodeArgs } from "../pages/Authentication/Confirmation-code/Confirmation-Code.interface";
 import { ApolloClientService } from "./apolloClient.service";
-import { code } from "ionicons/icons";
+import {
+  IConfirmationCodeResponse,
+  VerifyCodeArgs,
+} from "../pages/Authentication/Confirmation-code/Confirmation-Code";
 
 const ConfirmSignUpMutationDoc = gql`
   mutation ConfirmSignup($username: String!, $code: String!) {
     confirmSignup(username: $username, code: $code)
-  }`
+  }
+`;
 
 export class ConfirmationCodeService {
+  constructor() {}
+  private apolloClient = ApolloClientService.getInstance();
 
-    constructor() { }
+  async verifyCode({
+    username,
+    code,
+  }: VerifyCodeArgs): Promise<IConfirmationCodeResponse | null> {
+    try {
+      const result = await this.apolloClient.mutate({
+        mutation: ConfirmSignUpMutationDoc,
+        variables: {
+          username,
+          code,
+        },
+      });
 
-    //Getting Apollo service instance
-    private CLIENT = ApolloClientService.getInstance()
+      console.log("Verification Code mutation: ", result);
 
-    async verifyCode({
-        username,
-        code
-    }: VerifyCodeArgs): Promise<IConfirmationCodeResponse | null> {
-        try {
-            const result = await this.CLIENT.mutate({
-                mutation: ConfirmSignUpMutationDoc,
-                variables: {
-                    username,
-                    code
-                },
-            })
+      const data = result.data;
 
-            console.log('Verification Code mutation: ', result)
+      if (data.confirmSignup.error) {
+        throw new Error(data.confirmSignup.error.message);
+      }
 
-            const data = result.data
-
-            if (data.confirmSignup.error) {
-                throw new Error(data.confirmSignup.error.message);
-            }
-
-            return {
-                message: data.confirmSignup
-            };
-        } catch (error) {
-            console.log('Error confirmation code Service >>>> ', error)
-            throw new Error('Error while verifying code')
-        }
+      return {
+        message: data.confirmSignup,
+      };
+    } catch (error) {
+      console.log("Error confirmation code Service >>>> ", error);
+      throw new Error("Error while verifying code");
     }
+  }
 }

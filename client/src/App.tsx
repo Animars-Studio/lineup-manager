@@ -5,11 +5,10 @@ import {
   setupIonicReact,
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
-import { Redirect, Route } from "react-router-dom";
+import { Route } from "react-router-dom";
 import Menu from "./components/Menu";
 import { Register } from "./pages/Authentication/Register/Register";
 import { Login } from "./pages/Authentication/Login/Login";
-import { TenantRegister } from "./pages/Main/TenantRegister/TenantRegister";
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
 
@@ -39,14 +38,8 @@ import "@ionic/react/css/palettes/dark.system.css";
 
 /* Theme variables */
 import "./theme/variables.css";
-import Page from "./pages/Page";
 import { useEffect } from "react";
-import { ApolloQueryResult, gql } from "@apollo/client";
 import { ConfirmationCode } from "./pages/Authentication/Confirmation-code/Confirmation-Code";
-import { ApolloClientService } from "./services/apolloClient.service";
-
-//Practice component
-import { ConfirmationCodeJs } from "./pages/Authentication/Confirmation-code/Confirmation-Code copy";
 
 setupIonicReact();
 
@@ -54,18 +47,8 @@ const App: React.FC<any> = () => {
   const menuId = "main";
 
   useEffect(() => {
-    const client = ApolloClientService.getInstance()
-    client.query({
-      query: gql`
-     query{
-     hello
-     }
-    `,
-    })
-      .then((result: ApolloQueryResult<string>) => {
-        return result
-      });
-  }, [])
+    console.log("[App] component mounted");
+  }, []);
   return (
     <>
       <IonApp>
@@ -78,11 +61,7 @@ const App: React.FC<any> = () => {
             <IonSplitPane contentId="main">
               <Menu contentId="main" />
               <IonRouterOutlet id="main">
-                {/** Replace with <Tenants /> component */}
-                <Route path="/tenants" exact={true} component={() => {
-                  return <>Tenants List</>
-                }} />
-                <Route path="/tenant-register/:id" component={TenantRegister} />
+                <Route path="/dashboard" component={Login} />
               </IonRouterOutlet>
             </IonSplitPane>
           </IonRouterOutlet>
