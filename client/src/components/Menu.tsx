@@ -7,30 +7,11 @@ import {
   IonListHeader,
   IonMenu,
   IonMenuToggle,
-  IonNote,
 } from "@ionic/react";
 
-import {
-  archiveOutline,
-  archiveSharp,
-  bookmarkOutline,
-  eye,
-  eyeOff,
-  heartOutline,
-  heartSharp,
-  mailOutline,
-  mailSharp,
-  paperPlaneOutline,
-  paperPlaneSharp,
-  trashOutline,
-  trashSharp,
-  warningOutline,
-  warningSharp,
-} from "ionicons/icons";
+import { homeOutline, homeSharp } from "ionicons/icons";
 import "./Menu.css";
 import { useLocation } from "react-router";
-
-//const labels = ['Family', 'Friends', 'Notes', 'Work', 'Travel', 'Reminders'];
 
 type MenuProps = {
   contentId: string;
@@ -38,16 +19,10 @@ type MenuProps = {
 
 const menuItems = [
   {
-    title: "Inquilinos",
-    url: "/tenants",
-    iosIcon: mailOutline,
-    mdIcon: mailSharp,
-  },
-  {
-    title: "Registrar Inquilino",
-    url: "/tenant-register",
-    iosIcon: paperPlaneOutline,
-    mdIcon: paperPlaneSharp,
+    title: "Dashboard",
+    url: "/dashboard",
+    iosIcon: homeOutline,
+    mdIcon: homeSharp,
   },
 ];
 
