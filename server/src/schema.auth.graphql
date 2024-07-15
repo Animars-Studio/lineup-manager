@@ -1,0 +1,70 @@
+# Query
+
+query Hello {
+  hello
+}
+
+query ListGroups {
+  listGroups {
+    ... on ListCognitoGroupsResult {
+      groups {
+        name
+        description
+      }
+    }
+    ... on CustomError {
+      error {
+        message
+      }
+    }
+  }
+}
+
+# Fragments
+fragment CustomGraphQlResult on CustomGraphQlResult {
+  ... on GenericResult {
+    result
+  }
+  ... on CustomError {
+    error {
+      message
+    }
+  }
+}
+
+# Mutations
+mutation Signup($email: String!, $password: String!) {
+  signup(email: $email, password: $password) {
+    ... on User {
+      id
+      email
+      username
+      isConfirmed
+      createdAt
+      updatedAt
+    }
+    ... on CustomError {
+      error {
+        message
+      }
+    }
+  }
+}
+
+mutation Login($username: String!, $password: String!) {
+  login(username: $username, password: $password) {
+    ...CustomGraphQlResult
+  }
+}
+
+mutation ConfirmSignup($username: String!, $code: String!) {
+  confirmSignup(username: $username, code: $code) {
+    ...CustomGraphQlResult
+  }
+}
+
+mutation ResendConfirmationCode($username: String!) {
+  resendConfirmationCode(username: $username) {
+    ...CustomGraphQlResult
+  }
+}

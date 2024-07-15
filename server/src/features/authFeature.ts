@@ -1,5 +1,8 @@
-import { sign } from "crypto";
-import { CustomError, MutationSignupArgs, User } from "../generated/graphql";
+import {
+  MutationSignupArgs,
+  SignupResult,
+  User,
+} from "../generated/graphql";
 import { AuthResolvers } from "../resolvers/authResolvers";
 import { UserService } from "../services/userService";
 
@@ -26,18 +29,21 @@ export class AuthFeature {
     return AuthFeature.instance;
   }
 
-  public async signup(args: MutationSignupArgs): Promise<User | CustomError> {
+  public async signup(args: MutationSignupArgs): Promise<SignupResult> {
+    let result: SignupResult = {};
     const signupResult = await this.authResolvers.signup(args);
-    if (signupResult.error) {
-      return {
-        error: { message: signupResult.message },
+    if ("error" in signupResult) {
+      result = {
+        error: { message: signupResult.error?.message as string },
       };
     }
-    const userServiceResult = await this.userService.createUser<User>({
-      ...args,
-      isConfirmed: false,
-      username: signupResult.message,
-    });
-    return userServiceResult;
+    if ("result" in signupResult) {
+      result = await this.userService.createUser<User>({
+        ...args,
+        isConfirmed: false,
+        username: signupResult.result as string,
+      });
+    }
+    return result;
   }
 }

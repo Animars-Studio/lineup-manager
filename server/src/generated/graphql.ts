@@ -17,22 +17,42 @@ export type Scalars = {
   DateTime: { input: any; output: any; }
 };
 
+export type CognitoGroup = {
+  __typename?: 'CognitoGroup';
+  description?: Maybe<Scalars['String']['output']>;
+  name: Scalars['String']['output'];
+};
+
 export type CustomError = {
   __typename?: 'CustomError';
   error?: Maybe<Error>;
 };
+
+export type CustomGraphQlResult = CustomError | GenericResult;
 
 export type Error = {
   __typename?: 'Error';
   message: Scalars['String']['output'];
 };
 
+export type GenericResult = {
+  __typename?: 'GenericResult';
+  result?: Maybe<Scalars['String']['output']>;
+};
+
+export type ListCognitoGroupsResult = {
+  __typename?: 'ListCognitoGroupsResult';
+  groups?: Maybe<Array<Maybe<CognitoGroup>>>;
+};
+
+export type ListGroupsResult = CustomError | ListCognitoGroupsResult;
+
 export type Mutation = {
   __typename?: 'Mutation';
-  confirmSignup?: Maybe<Scalars['String']['output']>;
-  login?: Maybe<Scalars['String']['output']>;
-  resendConfirmationCode?: Maybe<Scalars['String']['output']>;
-  signup?: Maybe<UserResult>;
+  confirmSignup?: Maybe<CustomGraphQlResult>;
+  login?: Maybe<CustomGraphQlResult>;
+  resendConfirmationCode?: Maybe<CustomGraphQlResult>;
+  signup?: Maybe<SignupResult>;
 };
 
 
@@ -61,7 +81,10 @@ export type MutationSignupArgs = {
 export type Query = {
   __typename?: 'Query';
   hello?: Maybe<Scalars['String']['output']>;
+  listGroups?: Maybe<ListGroupsResult>;
 };
+
+export type SignupResult = CustomError | User;
 
 export type User = {
   __typename?: 'User';
@@ -72,8 +95,6 @@ export type User = {
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
   username?: Maybe<Scalars['String']['output']>;
 };
-
-export type UserResult = CustomError | User;
 
 
 
@@ -144,41 +165,63 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping of union types */
 export type ResolversUnionTypes<_RefType extends Record<string, unknown>> = {
-  UserResult: ( CustomError ) | ( User );
+  CustomGraphQlResult: ( CustomError ) | ( GenericResult );
+  ListGroupsResult: ( CustomError ) | ( ListCognitoGroupsResult );
+  SignupResult: ( CustomError ) | ( User );
 };
 
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
+  CognitoGroup: ResolverTypeWrapper<CognitoGroup>;
   CustomError: ResolverTypeWrapper<CustomError>;
+  CustomGraphQlResult: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['CustomGraphQlResult']>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
   Error: ResolverTypeWrapper<Error>;
+  GenericResult: ResolverTypeWrapper<GenericResult>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
+  ListCognitoGroupsResult: ResolverTypeWrapper<ListCognitoGroupsResult>;
+  ListGroupsResult: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['ListGroupsResult']>;
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
+  SignupResult: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['SignupResult']>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   User: ResolverTypeWrapper<User>;
-  UserResult: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['UserResult']>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Boolean: Scalars['Boolean']['output'];
+  CognitoGroup: CognitoGroup;
   CustomError: CustomError;
+  CustomGraphQlResult: ResolversUnionTypes<ResolversParentTypes>['CustomGraphQlResult'];
   DateTime: Scalars['DateTime']['output'];
   Error: Error;
+  GenericResult: GenericResult;
   ID: Scalars['ID']['output'];
+  ListCognitoGroupsResult: ListCognitoGroupsResult;
+  ListGroupsResult: ResolversUnionTypes<ResolversParentTypes>['ListGroupsResult'];
   Mutation: {};
   Query: {};
+  SignupResult: ResolversUnionTypes<ResolversParentTypes>['SignupResult'];
   String: Scalars['String']['output'];
   User: User;
-  UserResult: ResolversUnionTypes<ResolversParentTypes>['UserResult'];
+};
+
+export type CognitoGroupResolvers<ContextType = any, ParentType extends ResolversParentTypes['CognitoGroup'] = ResolversParentTypes['CognitoGroup']> = {
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type CustomErrorResolvers<ContextType = any, ParentType extends ResolversParentTypes['CustomError'] = ResolversParentTypes['CustomError']> = {
   error?: Resolver<Maybe<ResolversTypes['Error']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CustomGraphQlResultResolvers<ContextType = any, ParentType extends ResolversParentTypes['CustomGraphQlResult'] = ResolversParentTypes['CustomGraphQlResult']> = {
+  __resolveType: TypeResolveFn<'CustomError' | 'GenericResult', ParentType, ContextType>;
 };
 
 export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['DateTime'], any> {
@@ -190,15 +233,34 @@ export type ErrorResolvers<ContextType = any, ParentType extends ResolversParent
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type GenericResultResolvers<ContextType = any, ParentType extends ResolversParentTypes['GenericResult'] = ResolversParentTypes['GenericResult']> = {
+  result?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ListCognitoGroupsResultResolvers<ContextType = any, ParentType extends ResolversParentTypes['ListCognitoGroupsResult'] = ResolversParentTypes['ListCognitoGroupsResult']> = {
+  groups?: Resolver<Maybe<Array<Maybe<ResolversTypes['CognitoGroup']>>>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ListGroupsResultResolvers<ContextType = any, ParentType extends ResolversParentTypes['ListGroupsResult'] = ResolversParentTypes['ListGroupsResult']> = {
+  __resolveType: TypeResolveFn<'CustomError' | 'ListCognitoGroupsResult', ParentType, ContextType>;
+};
+
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  confirmSignup?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MutationConfirmSignupArgs, 'code' | 'username'>>;
-  login?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MutationLoginArgs, 'password' | 'username'>>;
-  resendConfirmationCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MutationResendConfirmationCodeArgs, 'username'>>;
-  signup?: Resolver<Maybe<ResolversTypes['UserResult']>, ParentType, ContextType, RequireFields<MutationSignupArgs, 'email' | 'password'>>;
+  confirmSignup?: Resolver<Maybe<ResolversTypes['CustomGraphQlResult']>, ParentType, ContextType, RequireFields<MutationConfirmSignupArgs, 'code' | 'username'>>;
+  login?: Resolver<Maybe<ResolversTypes['CustomGraphQlResult']>, ParentType, ContextType, RequireFields<MutationLoginArgs, 'password' | 'username'>>;
+  resendConfirmationCode?: Resolver<Maybe<ResolversTypes['CustomGraphQlResult']>, ParentType, ContextType, RequireFields<MutationResendConfirmationCodeArgs, 'username'>>;
+  signup?: Resolver<Maybe<ResolversTypes['SignupResult']>, ParentType, ContextType, RequireFields<MutationSignupArgs, 'email' | 'password'>>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   hello?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  listGroups?: Resolver<Maybe<ResolversTypes['ListGroupsResult']>, ParentType, ContextType>;
+};
+
+export type SignupResultResolvers<ContextType = any, ParentType extends ResolversParentTypes['SignupResult'] = ResolversParentTypes['SignupResult']> = {
+  __resolveType: TypeResolveFn<'CustomError' | 'User', ParentType, ContextType>;
 };
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
@@ -211,20 +273,37 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type UserResultResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserResult'] = ResolversParentTypes['UserResult']> = {
-  __resolveType: TypeResolveFn<'CustomError' | 'User', ParentType, ContextType>;
-};
-
 export type Resolvers<ContextType = any> = {
+  CognitoGroup?: CognitoGroupResolvers<ContextType>;
   CustomError?: CustomErrorResolvers<ContextType>;
+  CustomGraphQlResult?: CustomGraphQlResultResolvers<ContextType>;
   DateTime?: GraphQLScalarType;
   Error?: ErrorResolvers<ContextType>;
+  GenericResult?: GenericResultResolvers<ContextType>;
+  ListCognitoGroupsResult?: ListCognitoGroupsResultResolvers<ContextType>;
+  ListGroupsResult?: ListGroupsResultResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  SignupResult?: SignupResultResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
-  UserResult?: UserResultResolvers<ContextType>;
 };
 
+
+export type HelloQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type HelloQuery = { __typename?: 'Query', hello?: string | null };
+
+export type ListGroupsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ListGroupsQuery = { __typename?: 'Query', listGroups?: { __typename?: 'CustomError', error?: { __typename?: 'Error', message: string } | null } | { __typename?: 'ListCognitoGroupsResult', groups?: Array<{ __typename?: 'CognitoGroup', name: string, description?: string | null } | null> | null } | null };
+
+type CustomGraphQlResult_CustomError_Fragment = { __typename?: 'CustomError', error?: { __typename?: 'Error', message: string } | null };
+
+type CustomGraphQlResult_GenericResult_Fragment = { __typename?: 'GenericResult', result?: string | null };
+
+export type CustomGraphQlResultFragment = CustomGraphQlResult_CustomError_Fragment | CustomGraphQlResult_GenericResult_Fragment;
 
 export type SignupMutationVariables = Exact<{
   email: Scalars['String']['input'];
@@ -240,7 +319,7 @@ export type LoginMutationVariables = Exact<{
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login?: string | null };
+export type LoginMutation = { __typename?: 'Mutation', login?: { __typename?: 'CustomError', error?: { __typename?: 'Error', message: string } | null } | { __typename?: 'GenericResult', result?: string | null } | null };
 
 export type ConfirmSignupMutationVariables = Exact<{
   username: Scalars['String']['input'];
@@ -248,11 +327,11 @@ export type ConfirmSignupMutationVariables = Exact<{
 }>;
 
 
-export type ConfirmSignupMutation = { __typename?: 'Mutation', confirmSignup?: string | null };
+export type ConfirmSignupMutation = { __typename?: 'Mutation', confirmSignup?: { __typename?: 'CustomError', error?: { __typename?: 'Error', message: string } | null } | { __typename?: 'GenericResult', result?: string | null } | null };
 
 export type ResendConfirmationCodeMutationVariables = Exact<{
   username: Scalars['String']['input'];
 }>;
 
 
-export type ResendConfirmationCodeMutation = { __typename?: 'Mutation', resendConfirmationCode?: string | null };
+export type ResendConfirmationCodeMutation = { __typename?: 'Mutation', resendConfirmationCode?: { __typename?: 'CustomError', error?: { __typename?: 'Error', message: string } | null } | { __typename?: 'GenericResult', result?: string | null } | null };
