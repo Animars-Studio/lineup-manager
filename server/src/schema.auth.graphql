@@ -1,5 +1,25 @@
 # Query
 
+query Hello {
+  hello
+}
+
+query ListGroups {
+  listGroups {
+    ... on ListCognitoGroupsResult {
+      groups {
+        name
+        description
+      }
+    }
+    ... on CustomError {
+      error {
+        message
+      }
+    }
+  }
+}
+
 # Fragments
 fragment CustomGraphQlResult on CustomGraphQlResult {
   ... on GenericResult {

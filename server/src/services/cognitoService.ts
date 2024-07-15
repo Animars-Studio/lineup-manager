@@ -5,6 +5,14 @@ import {
   CognitoUser,
 } from "amazon-cognito-identity-js";
 
+import {
+  CognitoIdentityProviderClient,
+  GroupType,
+  ListGroupsCommand,
+} from "@aws-sdk/client-cognito-identity-provider";
+import { CognitoGroup } from "../generated/graphql";
+import { Error } from "aws-sdk/clients/servicecatalog";
+
 export type CognitoServiceSignUpArgs = {
   email: string;
   password: string;
@@ -27,6 +35,7 @@ export type CognitoServiceResendConfirmationCodeArgs = {
 export class CognitoService {
   private static instance: CognitoService;
   private userPool: CognitoUserPool;
+  private identityProvider: CognitoIdentityProviderClient;
 
   private constructor() {
     if (
@@ -40,6 +49,9 @@ export class CognitoService {
       ClientId: process.env.COGNITO_USER_POOL_CLIENT_ID,
     };
     this.userPool = new CognitoUserPool(poolData);
+    this.identityProvider = new CognitoIdentityProviderClient({
+      region: process.env.AWS_REGION,
+    });
   }
 
   public static getInstance(): CognitoService {
@@ -93,7 +105,6 @@ export class CognitoService {
     });
 
     attributeList = [emailAttribute, usernameAttribute];
-    console.log("Signing up with attributes:", attributeList);
 
     return new Promise((resolve, reject) => {
       this.userPool.signUp(
@@ -150,5 +161,18 @@ export class CognitoService {
         resolve("Confirmation code resent");
       });
     });
+  }
+
+  public async listGroups(): Promise<GroupType[]> {
+    const command = new ListGroupsCommand({
+      UserPoolId: process.env.COGNITO_USER_POOL_ID,
+    });
+    try {
+      const response = await this.identityProvider.send(command);
+      return response.Groups ?? [];
+    } catch (error) {
+      console.error("Error listing groups:", error);
+      throw new Error(JSON.stringify(error));
+    }
   }
 }

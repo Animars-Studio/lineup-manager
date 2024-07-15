@@ -43,9 +43,6 @@ custom:
     target: 'node16'
     platform: 'node'
     concurrency: 10
-  #scripts:
-    #hooks:
-      #'before:deploy:deploy': npm run migrations:run:dev
 
   isOffline: ${env:AM_IS_OFFLINE, "false"}
   offlineConfig:

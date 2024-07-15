@@ -21,11 +21,22 @@ type User {
   updatedAt: DateTime
 }
 
+type CognitoGroup {
+  name: String!
+  description: String
+}
+
+type ListCognitoGroupsResult {
+  groups: [CognitoGroup]
+}
+
 union CustomGraphQlResult = GenericResult | CustomError
 union SignupResult = User | CustomError
+union ListGroupsResult = ListCognitoGroupsResult | CustomError
 
 type Query {
   hello: String
+  listGroups: ListGroupsResult
 }
 
 type Mutation {

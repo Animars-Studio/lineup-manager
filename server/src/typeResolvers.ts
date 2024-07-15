@@ -21,4 +21,15 @@ export const typeResolvers = {
       return null;
     },
   },
+  ListGroupsResult: {
+    __resolveType(obj: Record<string, unknown>) {
+      if ("groups" in obj) {
+        return "ListCognitoGroupsResult";
+      }
+      if ("error" in obj) {
+        return "CustomError";
+      }
+      return null;
+    },
+  },
 };

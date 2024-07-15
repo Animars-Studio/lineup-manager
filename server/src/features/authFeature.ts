@@ -1,5 +1,4 @@
 import {
-  CustomGraphQlResult,
   MutationSignupArgs,
   SignupResult,
   User,

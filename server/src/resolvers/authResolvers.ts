@@ -4,9 +4,15 @@ import {
   MutationConfirmSignupArgs,
   MutationResendConfirmationCodeArgs,
   CustomGraphQlResult,
+  CognitoGroup,
+  ListGroupsResult,
 } from "../generated/graphql";
 import { CognitoService } from "../services/cognitoService";
-import { convertToGraphqlError, convertToGraphqlResult } from "../converters";
+import {
+  convertListGroupsToGraphqlResult,
+  convertToGraphqlError,
+  convertToGraphqlResult,
+} from "../converters";
 
 export class AuthResolvers {
   cognito: CognitoService = CognitoService.getInstance();
@@ -51,6 +57,13 @@ export class AuthResolvers {
     return this.cognito
       .resendConfirmationCode({ username })
       .then(convertToGraphqlResult)
+      .catch(convertToGraphqlError);
+  };
+
+  listGroups = async (): Promise<ListGroupsResult> => {
+    return this.cognito
+      .listGroups()
+      .then(convertListGroupsToGraphqlResult)
       .catch(convertToGraphqlError);
   };
 }

@@ -38,6 +38,9 @@ const resolvers: Resolvers = {
     hello: async (parent, args, context, info) => {
       return "Hello, World!";
     },
+    listGroups: async (parent, args, context, info) => {
+      return authResolvers.listGroups();
+    },
   },
   Mutation: {
     login: async (parent, args, context, info) => {
