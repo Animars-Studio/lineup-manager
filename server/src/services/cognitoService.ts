@@ -10,8 +10,6 @@ import {
   GroupType,
   ListGroupsCommand,
 } from "@aws-sdk/client-cognito-identity-provider";
-import { CognitoGroup } from "../generated/graphql";
-import { Error } from "aws-sdk/clients/servicecatalog";
 
 export type CognitoServiceSignUpArgs = {
   email: string;
@@ -50,7 +48,7 @@ export class CognitoService {
     };
     this.userPool = new CognitoUserPool(poolData);
     this.identityProvider = new CognitoIdentityProviderClient({
-      region: process.env.AWS_REGION,
+      region: process.env.COGNITO_REGION,
     });
   }
 
