@@ -166,9 +166,7 @@ export class CognitoService {
       UserPoolId: process.env.COGNITO_USER_POOL_ID,
     });
     try {
-      console.log("Listing groups with user pool id:", process.env.COGNITO_USER_POOL_ID);
       const response = await this.identityProvider.send(command);
-      console.log("List groups response:", response);
       return response.Groups ?? [];
     } catch (error) {
       console.error("Error listing groups:", error);
