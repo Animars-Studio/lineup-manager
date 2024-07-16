@@ -4,9 +4,9 @@ query Hello {
   hello
 }
 
-query ListGroups {
-  listGroups {
-    ... on ListCognitoGroupsResult {
+query CognitoGroups {
+  cognitoGroups {
+    ... on CognitoGroupsResult {
       groups {
         name
         description
@@ -65,6 +65,28 @@ mutation ConfirmSignup($username: String!, $code: String!) {
 
 mutation ResendConfirmationCode($username: String!) {
   resendConfirmationCode(username: $username) {
+    ...CustomGraphQlResult
+  }
+}
+
+mutation UserGroups($username: String!) {
+  userGroups(username: $username) {
+    ... on CognitoGroupsResult {
+      groups {
+        name
+        description
+      }
+    }
+    ... on CustomError {
+      error {
+        message
+      }
+    }
+  }
+}
+
+mutation AddUserToGroup($username: String!, $groupName: String!) {
+  addUserToGroup(username: $username, groupName: $groupName) {
     ...CustomGraphQlResult
   }
 }

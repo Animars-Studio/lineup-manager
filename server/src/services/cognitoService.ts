@@ -6,10 +6,13 @@ import {
 } from "amazon-cognito-identity-js";
 
 import {
+  AdminAddUserToGroupCommand,
+  AdminListGroupsForUserCommand,
   CognitoIdentityProviderClient,
   GroupType,
   ListGroupsCommand,
 } from "@aws-sdk/client-cognito-identity-provider";
+import { MutationAddUserToGroupArgs } from "../generated/graphql";
 
 export type CognitoServiceSignUpArgs = {
   email: string;
@@ -157,7 +160,10 @@ export class CognitoService {
           reject(err.message || JSON.stringify(err));
           return;
         }
-        console.log("[resendConfirmationCode] Confirmation code resent", result);
+        console.log(
+          "[resendConfirmationCode] Confirmation code resent",
+          result
+        );
         resolve("Confirmation code resent");
       });
     });
@@ -172,6 +178,40 @@ export class CognitoService {
       return response.Groups ?? [];
     } catch (error) {
       console.error("[listGroups] error:", error);
+      throw new Error(JSON.stringify(error));
+    }
+  }
+
+  public async listGroupsByUser(username: string): Promise<GroupType[]> {
+    const command = new AdminListGroupsForUserCommand({
+      UserPoolId: process.env.COGNITO_USER_POOL_ID,
+      Username: username,
+    });
+
+    try {
+      const response = await this.identityProvider.send(command);
+      return response.Groups ?? [];
+    } catch (error) {
+      console.error("[listGroupsByUser] error:", error);
+      throw new Error(JSON.stringify(error));
+    }
+  }
+
+  public async addUserToGroup({
+    username,
+    groupName,
+  }: MutationAddUserToGroupArgs): Promise<string> {
+    const command = new AdminAddUserToGroupCommand({
+      UserPoolId: process.env.COGNITO_USER_POOL_ID,
+      Username: username,
+      GroupName: groupName,
+    });
+
+    try {
+      await this.identityProvider.send(command);
+      return "User added to group";
+    } catch (error) {
+      console.error("[addUserToGroup] error:", error);
       throw new Error(JSON.stringify(error));
     }
   }

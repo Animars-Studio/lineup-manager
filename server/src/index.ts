@@ -38,7 +38,7 @@ const resolvers: Resolvers = {
     hello: async (parent, args, context, info) => {
       return "Hello, World!";
     },
-    listGroups: async (parent, args, context, info) => {
+    cognitoGroups: async (parent, args, context, info) => {
       return authResolvers.listGroups();
     },
   },
@@ -54,6 +54,12 @@ const resolvers: Resolvers = {
     },
     resendConfirmationCode: async (parent, args, context, info) => {
       return authResolvers.resendConfirmationCode(args);
+    },
+    userGroups: async (parent, args, context, info) => {
+      return authResolvers.listGroupsForUser(args);
+    },
+    addUserToGroup: async (parent, args, context, info) => {
+      return authResolvers.addUserToGroup(args);
     },
   },
 };

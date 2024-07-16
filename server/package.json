@@ -4,7 +4,6 @@
   "description": "Apollo server using AWS Lambda",
   "main": "src/index.js",
   "scripts": {
-    "analyze": "esbuild --bundle src/index.ts --outdir=dist --metafile=meta.json && esbuild-analyzer meta.json",
     "build": "tsc && cp src/schema.graphql dist/",
     "start": "yarn generate && yarn build && serverless offline",
     "start:dev": "export AM_IS_OFFLINE=true && nodemon",

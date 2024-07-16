@@ -26,17 +26,17 @@ type CognitoGroup {
   description: String
 }
 
-type ListCognitoGroupsResult {
+type CognitoGroupsResult {
   groups: [CognitoGroup]
 }
 
 union CustomGraphQlResult = GenericResult | CustomError
 union SignupResult = User | CustomError
-union ListGroupsResult = ListCognitoGroupsResult | CustomError
+union CognitoGroupsUnion = CognitoGroupsResult | CustomError
 
 type Query {
   hello: String
-  listGroups: ListGroupsResult
+  cognitoGroups: CognitoGroupsUnion
 }
 
 type Mutation {
@@ -44,4 +44,6 @@ type Mutation {
   signup(email: String!, password: String!): SignupResult
   confirmSignup(username: String!, code: String!): CustomGraphQlResult
   resendConfirmationCode(username: String!): CustomGraphQlResult
+  userGroups(username: String!): CognitoGroupsUnion
+  addUserToGroup(username: String!, groupName: String!): CustomGraphQlResult
 }

@@ -12,7 +12,7 @@ npx tsc
 mkdir -p .serverless
 
 # Copy the .graphql files from src to the dist directory
-cp src/schema.auth.graphql dist/
+cp src/operations.graphql dist/
 cp src/schema.graphql dist/
 
 # Copy the compiled files to the .serverless directory
