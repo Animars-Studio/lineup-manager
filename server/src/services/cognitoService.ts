@@ -79,6 +79,7 @@ export class CognitoService {
           resolve(result.getIdToken().getJwtToken());
         },
         onFailure: (err) => {
+          console.log("[login] error:", err);
           reject(err.message || JSON.stringify(err));
         },
       });
@@ -112,6 +113,7 @@ export class CognitoService {
         [],
         (err, result) => {
           if (err) {
+            console.log("[signup] error:", err);
             reject(err.message || JSON.stringify(err));
           }
           resolve(result?.user.getUsername() as string);
@@ -132,7 +134,7 @@ export class CognitoService {
     return new Promise((resolve, reject) => {
       cognitoUser.confirmRegistration(code, true, (err, result) => {
         if (err) {
-          console.log("Error confirming signup:", err);
+          console.log("[confirmSignup] error:", err);
           reject(err.message || JSON.stringify(err));
           return;
         }
@@ -155,7 +157,7 @@ export class CognitoService {
           reject(err.message || JSON.stringify(err));
           return;
         }
-        console.log("Confirmation code resent", result);
+        console.log("[resendConfirmationCode] Confirmation code resent", result);
         resolve("Confirmation code resent");
       });
     });
@@ -169,7 +171,7 @@ export class CognitoService {
       const response = await this.identityProvider.send(command);
       return response.Groups ?? [];
     } catch (error) {
-      console.error("Error listing groups:", error);
+      console.error("[listGroups] error:", error);
       throw new Error(JSON.stringify(error));
     }
   }
