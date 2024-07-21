@@ -8,14 +8,14 @@ import {
   MutationUserGroupsArgs,
   MutationAddUserToGroupArgs,
 } from "../generated/graphql";
-import { CognitoService } from "../services/cognitoService";
+import { CognitoService } from "../services/cognito.service";
 import {
   convertListGroupsToGraphqlResult,
   convertToGraphqlError,
   convertToGraphqlResult,
 } from "../converters";
 
-export class AuthResolvers {
+export class AuthResolver {
   cognito: CognitoService = CognitoService.getInstance();
   constructor() {}
 

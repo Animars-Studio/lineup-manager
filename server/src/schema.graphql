@@ -1,4 +1,5 @@
 scalar DateTime
+scalar Upload
 
 type Error {
   message: String!
@@ -19,6 +20,7 @@ type User {
   isConfirmed: Boolean
   createdAt: DateTime
   updatedAt: DateTime
+  teamId: ID
 }
 
 type CognitoGroup {
@@ -30,9 +32,22 @@ type CognitoGroupsResult {
   groups: [CognitoGroup]
 }
 
+# auth
 union CustomGraphQlResult = GenericResult | CustomError
 union SignupResult = User | CustomError
 union CognitoGroupsUnion = CognitoGroupsResult | CustomError
+
+type Team {
+  id: ID!
+  name: String!
+  country: String!
+  logoUrl: String
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+# team
+union TeamResult = Team | CustomError
 
 type Query {
   hello: String
@@ -46,4 +61,11 @@ type Mutation {
   resendConfirmationCode(username: String!): CustomGraphQlResult
   userGroups(username: String!): CognitoGroupsUnion
   addUserToGroup(username: String!, groupName: String!): CustomGraphQlResult
+  createTeam(
+    userId: String!
+    name: String!
+    country: String!
+    file: Upload
+  ): TeamResult
 }
+

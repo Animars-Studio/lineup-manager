@@ -32,4 +32,15 @@ export const typeResolvers = {
       return null;
     },
   },
+  TeamResult: {
+    __resolveType(obj: Record<string, unknown>) {
+      if ("id" in obj) {
+        return "Team";
+      }
+      if ("error" in obj) {
+        return "CustomError";
+      }
+      return null;
+    },
+  },
 };

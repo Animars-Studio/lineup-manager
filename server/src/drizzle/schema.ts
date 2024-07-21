@@ -34,10 +34,10 @@ export const usersRelations = relations(usersTable, ({ one, many }) => ({
 }));
 
 export const teamsTable = pgTable("teams", {
-  id: serial("id").primaryKey().notNull(),
+  id: varchar("id").primaryKey().notNull(),
   name: varchar("name").notNull().default(""),
   country: varchar("country").notNull().default(""),
-  logoUrl: varchar("logoUrl").notNull().default(""),
+  logoUrl: varchar("logoUrl").default(""),
   createdAt: timestamp("createdAt"),
   updatedAt: timestamp("updatedAt"),
 });

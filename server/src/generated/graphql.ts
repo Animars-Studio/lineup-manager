@@ -15,6 +15,7 @@ export type Scalars = {
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
   DateTime: { input: any; output: any; }
+  Upload: { input: any; output: any; }
 };
 
 export type CognitoGroup = {
@@ -51,6 +52,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   addUserToGroup?: Maybe<CustomGraphQlResult>;
   confirmSignup?: Maybe<CustomGraphQlResult>;
+  createTeam?: Maybe<TeamResult>;
   login?: Maybe<CustomGraphQlResult>;
   resendConfirmationCode?: Maybe<CustomGraphQlResult>;
   signup?: Maybe<SignupResult>;
@@ -67,6 +69,14 @@ export type MutationAddUserToGroupArgs = {
 export type MutationConfirmSignupArgs = {
   code: Scalars['String']['input'];
   username: Scalars['String']['input'];
+};
+
+
+export type MutationCreateTeamArgs = {
+  country: Scalars['String']['input'];
+  file?: InputMaybe<Scalars['Upload']['input']>;
+  name: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
 };
 
 
@@ -99,12 +109,25 @@ export type Query = {
 
 export type SignupResult = CustomError | User;
 
+export type Team = {
+  __typename?: 'Team';
+  country: Scalars['String']['output'];
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  id: Scalars['ID']['output'];
+  logoUrl?: Maybe<Scalars['String']['output']>;
+  name: Scalars['String']['output'];
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+};
+
+export type TeamResult = CustomError | Team;
+
 export type User = {
   __typename?: 'User';
   createdAt?: Maybe<Scalars['DateTime']['output']>;
   email: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   isConfirmed?: Maybe<Scalars['Boolean']['output']>;
+  teamId?: Maybe<Scalars['ID']['output']>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
   username?: Maybe<Scalars['String']['output']>;
 };
@@ -181,6 +204,7 @@ export type ResolversUnionTypes<_RefType extends Record<string, unknown>> = {
   CognitoGroupsUnion: ( CognitoGroupsResult ) | ( CustomError );
   CustomGraphQlResult: ( CustomError ) | ( GenericResult );
   SignupResult: ( CustomError ) | ( User );
+  TeamResult: ( CustomError ) | ( Team );
 };
 
 
@@ -200,6 +224,9 @@ export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>;
   SignupResult: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['SignupResult']>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
+  Team: ResolverTypeWrapper<Team>;
+  TeamResult: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['TeamResult']>;
+  Upload: ResolverTypeWrapper<Scalars['Upload']['output']>;
   User: ResolverTypeWrapper<User>;
 };
 
@@ -219,6 +246,9 @@ export type ResolversParentTypes = {
   Query: {};
   SignupResult: ResolversUnionTypes<ResolversParentTypes>['SignupResult'];
   String: Scalars['String']['output'];
+  Team: Team;
+  TeamResult: ResolversUnionTypes<ResolversParentTypes>['TeamResult'];
+  Upload: Scalars['Upload']['output'];
   User: User;
 };
 
@@ -263,6 +293,7 @@ export type GenericResultResolvers<ContextType = any, ParentType extends Resolve
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   addUserToGroup?: Resolver<Maybe<ResolversTypes['CustomGraphQlResult']>, ParentType, ContextType, RequireFields<MutationAddUserToGroupArgs, 'groupName' | 'username'>>;
   confirmSignup?: Resolver<Maybe<ResolversTypes['CustomGraphQlResult']>, ParentType, ContextType, RequireFields<MutationConfirmSignupArgs, 'code' | 'username'>>;
+  createTeam?: Resolver<Maybe<ResolversTypes['TeamResult']>, ParentType, ContextType, RequireFields<MutationCreateTeamArgs, 'country' | 'name' | 'userId'>>;
   login?: Resolver<Maybe<ResolversTypes['CustomGraphQlResult']>, ParentType, ContextType, RequireFields<MutationLoginArgs, 'password' | 'username'>>;
   resendConfirmationCode?: Resolver<Maybe<ResolversTypes['CustomGraphQlResult']>, ParentType, ContextType, RequireFields<MutationResendConfirmationCodeArgs, 'username'>>;
   signup?: Resolver<Maybe<ResolversTypes['SignupResult']>, ParentType, ContextType, RequireFields<MutationSignupArgs, 'email' | 'password'>>;
@@ -278,11 +309,30 @@ export type SignupResultResolvers<ContextType = any, ParentType extends Resolver
   __resolveType: TypeResolveFn<'CustomError' | 'User', ParentType, ContextType>;
 };
 
+export type TeamResolvers<ContextType = any, ParentType extends ResolversParentTypes['Team'] = ResolversParentTypes['Team']> = {
+  country?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  createdAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  logoUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  updatedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type TeamResultResolvers<ContextType = any, ParentType extends ResolversParentTypes['TeamResult'] = ResolversParentTypes['TeamResult']> = {
+  __resolveType: TypeResolveFn<'CustomError' | 'Team', ParentType, ContextType>;
+};
+
+export interface UploadScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Upload'], any> {
+  name: 'Upload';
+}
+
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
   createdAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   isConfirmed?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  teamId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   updatedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
   username?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -300,14 +350,12 @@ export type Resolvers<ContextType = any> = {
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   SignupResult?: SignupResultResolvers<ContextType>;
+  Team?: TeamResolvers<ContextType>;
+  TeamResult?: TeamResultResolvers<ContextType>;
+  Upload?: GraphQLScalarType;
   User?: UserResolvers<ContextType>;
 };
 
-
-export type HelloQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type HelloQuery = { __typename?: 'Query', hello?: string | null };
 
 export type CognitoGroupsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -365,3 +413,13 @@ export type AddUserToGroupMutationVariables = Exact<{
 
 
 export type AddUserToGroupMutation = { __typename?: 'Mutation', addUserToGroup?: { __typename?: 'CustomError', error?: { __typename?: 'Error', message: string } | null } | { __typename?: 'GenericResult', result?: string | null } | null };
+
+export type CreateTeamMutationVariables = Exact<{
+  userId: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  country: Scalars['String']['input'];
+  file?: InputMaybe<Scalars['Upload']['input']>;
+}>;
+
+
+export type CreateTeamMutation = { __typename?: 'Mutation', createTeam?: { __typename?: 'CustomError', error?: { __typename?: 'Error', message: string } | null } | { __typename?: 'Team' } | null };

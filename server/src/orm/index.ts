@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { PostgresJsDatabase, drizzle } from "drizzle-orm/postgres-js";
 import * as schema from "../drizzle/schema";
 import { PgTable, TableConfig } from "drizzle-orm/pg-core";
@@ -19,18 +20,30 @@ export class BaseDrizzleOrm {
     >;
   }
 
+  public async getById<T>(id: string, entity: PgTable<TableConfig>) {
+    const db = DbInstance.getInstance() as PostgresJsDatabase<typeof schema>;
+    return db
+      .select(entity as any)
+      .from(entity)
+      .where(eq((entity as any).id, id))
+      .execute() as Promise<T>;
+  }
+
   public async update<T>(
     id: string,
     entity: PgTable<TableConfig>,
     values: Partial<T>
   ) {
     const db = DbInstance.getInstance() as PostgresJsDatabase<typeof schema>;
-    return db
-      .update(entity)
-      .set(values)
-      .where(eq((entity as any).id, id))
-      .returning()
-      .execute() as Promise<T>;
+    return (
+      db
+        .update(entity)
+        .set(values)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .where(eq((entity as any).id, id))
+        .returning()
+        .execute() as Promise<T>
+    );
   }
 }
 

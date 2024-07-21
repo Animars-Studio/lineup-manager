@@ -34,10 +34,17 @@ provider:
           Action:
             - cognito-idp:ListGroups
           Resource: arn:aws:cognito-idp:${self:provider.region}:${self:custom.accountId}:userpool/${self:provider.environment.COGNITO_USER_POOL_ID}
+        - Effect: Allow
+          Action:
+            - s3:PutObject
+            - s3:GetObject
+            - s3:DeleteObject
+          Resource: arn:aws:s3:::lineup-manager-dev/*
+        
 
 functions:
   graphql:
-    handler: dist/index.graphqlHandler
+    handler: dist/index.handler
     events:
       - httpApi:
           path: /

@@ -1,10 +1,6 @@
-import {
-  MutationSignupArgs,
-  SignupResult,
-  User,
-} from "../generated/graphql";
-import { AuthResolvers } from "../resolvers/authResolvers";
-import { UserService } from "../services/userService";
+import { MutationSignupArgs, SignupResult, User } from "../generated/graphql";
+import { AuthResolver } from "../resolvers/auth.resolver";
+import { UserService } from "../services/user.service";
 
 /**
  * This pattern involves creating an "orchestrator" or "facade" type classes
@@ -14,11 +10,11 @@ import { UserService } from "../services/userService";
  */
 export class AuthFeature {
   private static instance: AuthFeature;
-  private authResolvers: AuthResolvers;
+  private authResolvers: AuthResolver;
   private userService: UserService;
 
   constructor() {
-    this.authResolvers = new AuthResolvers();
+    this.authResolvers = new AuthResolver();
     this.userService = UserService.getInstance();
   }
 

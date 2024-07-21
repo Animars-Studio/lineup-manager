@@ -29,6 +29,13 @@
       "when": 1720667777257,
       "tag": "0003_add_user_team_and_positions",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1721536707387,
+      "tag": "0004_change_team_id_serial_to_uuid",
+      "breakpoints": true
     }
   ]
 }

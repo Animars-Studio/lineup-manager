@@ -1,9 +1,4 @@
 # Query
-
-query Hello {
-  hello
-}
-
 query CognitoGroups {
   cognitoGroups {
     ... on CognitoGroupsResult {
@@ -87,6 +82,18 @@ mutation UserGroups($username: String!) {
 
 mutation AddUserToGroup($username: String!, $groupName: String!) {
   addUserToGroup(username: $username, groupName: $groupName) {
+    ...CustomGraphQlResult
+  }
+}
+
+# Team
+mutation CreateTeam(
+  $userId: String!
+  $name: String!
+  $country: String!
+  $file: Upload
+) {
+  createTeam(userId: $userId, name: $name, country: $country, file: $file) {
     ...CustomGraphQlResult
   }
 }

@@ -1,4 +1,5 @@
 import { GroupType } from "@aws-sdk/client-cognito-identity-provider";
+import { Team } from "./generated/graphql";
 
 export const convertToGraphqlResult = (result: string) => {
   return { result };
@@ -17,4 +18,10 @@ export const convertListGroupsToGraphqlResult = (groups: GroupType[]) => {
       };
     }),
   };
+};
+
+export const convertCreateTeamToGraphqlResult = (
+  team: Team
+) => {
+  return team
 };
