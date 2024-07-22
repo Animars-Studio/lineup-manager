@@ -40,6 +40,8 @@ import "@ionic/react/css/palettes/dark.system.css";
 import "./theme/variables.css";
 import { useEffect } from "react";
 import { ConfirmationCode } from "./pages/Authentication/Confirmation-code/Confirmation-Code";
+import { CreateTeam } from "./pages/CoachModule/CreateTeam";
+import { RoleSelection } from "./pages/RoleSelection/RoleSelection";
 
 setupIonicReact();
 
@@ -57,6 +59,8 @@ const App: React.FC<any> = () => {
             <Route path="/login" component={Login} />
             <Route path="/register" component={Register} />
             <Route path="/confirmation-code" component={ConfirmationCode} />
+            <Route path="/role-selection" component={RoleSelection} />
+            <Route path="/create-team" component={CreateTeam} />
 
             <IonSplitPane contentId="main">
               <Menu contentId="main" />
