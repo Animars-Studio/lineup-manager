@@ -42,6 +42,7 @@ import { useEffect } from "react";
 import { ConfirmationCode } from "./pages/Authentication/Confirmation-code/Confirmation-Code";
 import { CreateTeam } from "./pages/CoachModule/CreateTeam";
 import { RoleSelection } from "./pages/RoleSelection/RoleSelection";
+import { Dashboard } from "./pages/Dashboard/Dashboard";
 
 setupIonicReact();
 
@@ -61,13 +62,9 @@ const App: React.FC<any> = () => {
             <Route path="/confirmation-code" component={ConfirmationCode} />
             <Route path="/role-selection" component={RoleSelection} />
             <Route path="/create-team" component={CreateTeam} />
+            <Route path="/dashboard" component={Dashboard} />
 
-            <IonSplitPane contentId="main">
-              <Menu contentId="main" />
-              <IonRouterOutlet id="main">
-                <Route path="/dashboard" component={Login} />
-              </IonRouterOutlet>
-            </IonSplitPane>
+          
           </IonRouterOutlet>
         </IonReactRouter>
       </IonApp>
