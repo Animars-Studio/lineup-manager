@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from "uuid";
 import { teamsTable } from "../drizzle/schema";
 import { Team } from "../generated/graphql";
 import { BaseDrizzleOrm } from "../orm";
+import { convertInsertArgs } from "./helpers";
 
 export type TeamArgs = Omit<Team, "id">;
 
@@ -24,12 +25,7 @@ export class TeamService {
     try {
       const rows = await this.orm.insert<typeof teamsTable.$inferInsert>(
         teamsTable,
-        [
-          {
-            ...args,
-            id: uuidv4(),
-          },
-        ]
+        [convertInsertArgs(args)]
       );
       const [row] = rows;
       return row as T;

@@ -1,5 +1,6 @@
 import { usersTable } from "../drizzle/schema";
 import { BaseDrizzleOrm } from "../orm";
+import { convertInsertArgs } from "./helpers";
 
 type CreateUserArgs = {
   email: string;
@@ -37,7 +38,7 @@ export class UserService {
     try {
       const rows = await this.orm.insert<typeof usersTable.$inferInsert>(
         usersTable,
-        [{ ...args }]
+        [convertInsertArgs(args)]
       );
       const [row] = rows;
       return row as T;
