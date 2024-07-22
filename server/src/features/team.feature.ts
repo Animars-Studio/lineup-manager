@@ -83,7 +83,7 @@ export class TeamFeature {
       logoUrl = `https://${process.env.S3_BUCKET_NAME}.s3.amazonaws.com/${key}`;
     } catch (error) {
       console.error("[uploadImage] error:", error);
-      throw new Error("Failed to upload image.");
+      throw new Error(`Failed to upload image. ${JSON.stringify(error)}`);
     }
 
     // create team
