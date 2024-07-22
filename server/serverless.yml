@@ -20,6 +20,7 @@ provider:
     COGNITO_USER_POOL_ID: ${ssm:/${self:provider.stage}/cognito_user_pool_id}
     COGNITO_USER_POOL_CLIENT_ID: ${ssm:/${self:provider.stage}/cognito_user_pool_client_id}
     COGNITO_REGION: us-east-1
+    S3_BUCKET_NAME: ${ssm:/${self:provider.stage}/s3_bucket_name}
     AM_IS_OFFLINE: ${self:custom.isOffline}
   iam:
     role:
@@ -27,7 +28,7 @@ provider:
         - Effect: Allow
           Action:
             - ssm:GetParameter
-          Resource: 
+          Resource:
             - arn:aws:ssm:${self:provider.region}:*:parameter/path/to/cognito/user_pool_id
             - arn:aws:ssm:${self:provider.region}:*:parameter/path/to/cognito/user_pool_client_id
         - Effect: Allow
@@ -40,7 +41,14 @@ provider:
             - s3:GetObject
             - s3:DeleteObject
           Resource: arn:aws:s3:::lineup-manager-dev/*
-        
+        - Effect: Allow
+          Action:
+            - cognito-idp:AdminAddUserToGroup
+            - cognito-idp:ListGroups
+            - cognito-idp:AdminListGroupsForUser
+            - cognito-idp:AdminGetUser
+            - cognito-idp:AdminRemoveUserFromGroup
+          Resource: arn:aws:cognito-idp:us-east-1:058264423493:userpool/us-east-1_qujbNwQ7q
 
 functions:
   graphql:
