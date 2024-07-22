@@ -1,6 +1,5 @@
 import { relations } from "drizzle-orm";
 import {
-  serial,
   timestamp,
   pgTable,
   varchar,
@@ -10,7 +9,7 @@ import {
 } from "drizzle-orm/pg-core";
 
 export const usersTable = pgTable("users", {
-  id: serial("id").primaryKey().notNull(),
+  id: varchar("id").primaryKey().notNull(),
   email: varchar("email").notNull().default(""),
   username: varchar("username"),
   password: varchar("password").notNull().default(""),
@@ -21,7 +20,7 @@ export const usersTable = pgTable("users", {
   country: varchar("country").notNull().default(""),
   createdAt: timestamp("createdAt"),
   updatedAt: timestamp("updatedAt"),
-  teamId: integer("teamId"),
+  teamId: varchar("teamId"),
 });
 
 // relations for the users table
@@ -34,10 +33,10 @@ export const usersRelations = relations(usersTable, ({ one, many }) => ({
 }));
 
 export const teamsTable = pgTable("teams", {
-  id: serial("id").primaryKey().notNull(),
+  id: varchar("id").primaryKey().notNull(),
   name: varchar("name").notNull().default(""),
   country: varchar("country").notNull().default(""),
-  logoUrl: varchar("logoUrl").notNull().default(""),
+  logoUrl: varchar("logoUrl").default(""),
   createdAt: timestamp("createdAt"),
   updatedAt: timestamp("updatedAt"),
 });
@@ -48,7 +47,7 @@ export const teamRelations = relations(teamsTable, ({ one, many }) => ({
 }));
 
 export const positionsTable = pgTable("positions", {
-  id: serial("id").primaryKey().notNull(),
+  id: varchar("id").primaryKey().notNull(),
   abbreviation: varchar("abbreviation").notNull().default(""),
   longName: varchar("longName").notNull().default(""),
   fieldIdentifier: integer("fieldIdentifier").notNull().default(0),
@@ -65,10 +64,10 @@ export const positionRelations = relations(positionsTable, ({ one, many }) => ({
 export const userPositionsTable = pgTable(
   "user_positions",
   {
-    userId: integer("userId")
+    userId: varchar("userId")
       .notNull()
       .references(() => usersTable.id),
-    positionId: integer("positionId")
+    positionId: varchar("positionId")
       .notNull()
       .references(() => positionsTable.id),
   },

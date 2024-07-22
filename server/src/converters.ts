@@ -1,12 +1,12 @@
 import { GroupType } from "@aws-sdk/client-cognito-identity-provider";
-import { CognitoGroup } from "./generated/graphql";
+import { Team } from "./generated/graphql";
 
 export const convertToGraphqlResult = (result: string) => {
   return { result };
 };
 
 export const convertToGraphqlError = (error: unknown) => {
-  return { error: { message: error as string } };
+  return { error: { message: JSON.stringify(error) } };
 };
 
 export const convertListGroupsToGraphqlResult = (groups: GroupType[]) => {
@@ -18,4 +18,10 @@ export const convertListGroupsToGraphqlResult = (groups: GroupType[]) => {
       };
     }),
   };
+};
+
+export const convertCreateTeamToGraphqlResult = (
+  team: Team
+) => {
+  return team
 };

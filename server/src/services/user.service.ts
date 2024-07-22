@@ -1,5 +1,6 @@
 import { usersTable } from "../drizzle/schema";
 import { BaseDrizzleOrm } from "../orm";
+import { convertInsertArgs } from "./helpers";
 
 type CreateUserArgs = {
   email: string;
@@ -23,11 +24,21 @@ export class UserService {
     return UserService.instance;
   }
 
+  public async getUser<T>(id: string): Promise<T> {
+    try {
+      const row = await this.orm.getById<T>(id, usersTable);
+      return row;
+    } catch (error) {
+      console.log("[UserService] get user error: ", error);
+      throw new Error("Error getting user");
+    }
+  }
+
   public async createUser<T>(args: CreateUserArgs): Promise<T> {
     try {
       const rows = await this.orm.insert<typeof usersTable.$inferInsert>(
         usersTable,
-        [{ ...args }]
+        [convertInsertArgs(args)]
       );
       const [row] = rows;
       return row as T;

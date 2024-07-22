@@ -4,17 +4,18 @@ import {
   MutationConfirmSignupArgs,
   MutationResendConfirmationCodeArgs,
   CustomGraphQlResult,
-  CognitoGroup,
-  ListGroupsResult,
+  CognitoGroupsUnion,
+  MutationUserGroupsArgs,
+  MutationAddUserToGroupArgs,
 } from "../generated/graphql";
-import { CognitoService } from "../services/cognitoService";
+import { CognitoService } from "../services/cognito.service";
 import {
   convertListGroupsToGraphqlResult,
   convertToGraphqlError,
   convertToGraphqlResult,
 } from "../converters";
 
-export class AuthResolvers {
+export class AuthResolver {
   cognito: CognitoService = CognitoService.getInstance();
   constructor() {}
 
@@ -60,10 +61,29 @@ export class AuthResolvers {
       .catch(convertToGraphqlError);
   };
 
-  listGroups = async (): Promise<ListGroupsResult> => {
+  listGroups = async (): Promise<CognitoGroupsUnion> => {
     return this.cognito
       .listGroups()
       .then(convertListGroupsToGraphqlResult)
+      .catch(convertToGraphqlError);
+  };
+
+  listGroupsForUser = async ({
+    username,
+  }: MutationUserGroupsArgs): Promise<CognitoGroupsUnion> => {
+    return this.cognito
+      .listGroupsByUser(username)
+      .then(convertListGroupsToGraphqlResult)
+      .catch(convertToGraphqlError);
+  };
+
+  addUserToGroup = async ({
+    username,
+    groupName,
+  }: MutationAddUserToGroupArgs): Promise<CustomGraphQlResult> => {
+    return this.cognito
+      .addUserToGroup({ username, groupName })
+      .then(convertToGraphqlResult)
       .catch(convertToGraphqlError);
   };
 }

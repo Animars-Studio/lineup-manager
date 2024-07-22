@@ -21,10 +21,21 @@ export const typeResolvers = {
       return null;
     },
   },
-  ListGroupsResult: {
+  CognitoGroupsUnion: {
     __resolveType(obj: Record<string, unknown>) {
       if ("groups" in obj) {
-        return "ListCognitoGroupsResult";
+        return "CognitoGroupsResult";
+      }
+      if ("error" in obj) {
+        return "CustomError";
+      }
+      return null;
+    },
+  },
+  TeamResult: {
+    __resolveType(obj: Record<string, unknown>) {
+      if ("id" in obj) {
+        return "Team";
       }
       if ("error" in obj) {
         return "CustomError";

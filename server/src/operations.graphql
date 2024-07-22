@@ -1,12 +1,7 @@
 # Query
-
-query Hello {
-  hello
-}
-
-query ListGroups {
-  listGroups {
-    ... on ListCognitoGroupsResult {
+query CognitoGroups {
+  cognitoGroups {
+    ... on CognitoGroupsResult {
       groups {
         name
         description
@@ -65,6 +60,40 @@ mutation ConfirmSignup($username: String!, $code: String!) {
 
 mutation ResendConfirmationCode($username: String!) {
   resendConfirmationCode(username: $username) {
+    ...CustomGraphQlResult
+  }
+}
+
+mutation UserGroups($username: String!) {
+  userGroups(username: $username) {
+    ... on CognitoGroupsResult {
+      groups {
+        name
+        description
+      }
+    }
+    ... on CustomError {
+      error {
+        message
+      }
+    }
+  }
+}
+
+mutation AddUserToGroup($username: String!, $groupName: String!) {
+  addUserToGroup(username: $username, groupName: $groupName) {
+    ...CustomGraphQlResult
+  }
+}
+
+# Team
+mutation CreateTeam(
+  $userId: String!
+  $name: String!
+  $country: String!
+  $file: Upload
+) {
+  createTeam(userId: $userId, name: $name, country: $country, file: $file) {
     ...CustomGraphQlResult
   }
 }
