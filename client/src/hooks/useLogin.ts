@@ -1,5 +1,5 @@
 import { FormEvent, useState } from "react";
-import { ILogin, LoginResponse } from "../pages/Authentication/Login/Login.interface";
+import { ILogin, LoginResponse } from "../pages/Authentication/Login/Login";
 import { useHistory } from "react-router";
 import { LoginService } from "../services/login.service";
 import {RoleVerificationService} from "../services/roleVerification.service"
@@ -40,10 +40,10 @@ export const useLogin = (loginInitialForm: ILogin) => {
 
             //Save token in localStorage
             localStorageService.logIn(response.message)
-
-            roleVerificationService.isAdmin()
+            console.log("Login success")
+            //roleVerificationService.isAdmin()
             //navigate to next component
-            //navigate.push('/register')
+            navigate.push('/role-selection')
 
         } catch (error) {
             console.error("Error during verifying admin: ", error);

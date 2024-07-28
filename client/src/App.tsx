@@ -57,6 +57,7 @@ const App: React.FC<any> = () => {
       <IonApp>
         <IonReactRouter>
           <IonRouterOutlet>
+            <Route path="/" component={Login} />
             <Route path="/login" component={Login} />
             <Route path="/register" component={Register} />
             <Route path="/confirmation-code" component={ConfirmationCode} />
