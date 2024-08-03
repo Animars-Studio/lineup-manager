@@ -4,13 +4,14 @@ import {
 import { useRoleSelection } from '../../hooks/useRoleSelection'; 
 
 export interface ISelectRole {
-    name: string;
-    //description?: string;
+    username: string;
+    groupName:string;
   }
 
 //Select role initial state
 const selectRoleInitialForm: ISelectRole = {
-    name: "",
+    username: "",
+    groupName:""
   };
 
 export const RoleSelection: React.FC = () => {
@@ -31,8 +32,8 @@ export const RoleSelection: React.FC = () => {
                 label="Select Role"
                 labelPlacement="floating"
                 placeholder="Select Role"
-                name="name"
-                value={roleForm.name}
+                name="groupName"
+                value={roleForm.groupName}
                 onIonChange={handleChange}
               >
                 {rolesList.map((role, index) => (

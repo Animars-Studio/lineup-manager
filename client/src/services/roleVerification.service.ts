@@ -38,6 +38,7 @@ export class RoleVerificationService {
     }
     return false;
   }
+
   getEmail (){
     const token = this.localStorageService.getToken();
         if (token) {
