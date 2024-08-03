@@ -1,0 +1,1 @@
+ALTER TABLE "user_teams" ADD COLUMN "role" varchar DEFAULT '' NOT NULL;

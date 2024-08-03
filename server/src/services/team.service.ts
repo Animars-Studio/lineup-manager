@@ -21,6 +21,16 @@ export class TeamService {
     return TeamService.instance;
   }
 
+  public async getTeam<T>(id: string): Promise<T> {
+    try {
+      const row = await this.orm.getById<T>(id, teamsTable);
+      return row;
+    } catch (error) {
+      console.log("[TeamService] get team error: ", error);
+      throw new Error("Error getting team by id");
+    }
+  }
+
   public async createTeam<T>(args: TeamArgs): Promise<T> {
     try {
       const rows = await this.orm.insert<typeof teamsTable.$inferInsert>(

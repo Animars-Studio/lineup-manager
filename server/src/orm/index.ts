@@ -5,13 +5,17 @@ import { PgTable, TableConfig } from "drizzle-orm/pg-core";
 import postgres from "postgres";
 import { dbConfig } from "../drizzle/db";
 import { awsRdsConfig } from "../drizzle/db-rds";
-import { eq } from "drizzle-orm";
+import { SQLWrapper, eq } from "drizzle-orm";
 
 import { config } from "dotenv";
 config();
 
 export class BaseDrizzleOrm {
   constructor() {}
+
+  public async getDb() {
+    return DbInstance.getInstance() as PostgresJsDatabase<typeof schema>;
+  }
 
   public async insert<T>(entity: PgTable<TableConfig>, values: T[]) {
     const db = DbInstance.getInstance() as PostgresJsDatabase<typeof schema>;
