@@ -1,9 +1,10 @@
 import { gql } from "@apollo/client";
 import { ApolloClientService } from "./apolloClient.service";
 import { ISelectRole } from "../pages/RoleSelection/RoleSelection";
+import { MappedRole } from "../hooks/useRoleSelection";
 
 export interface IRoleResponse {
-    roles: ISelectRole[];
+    roles: MappedRole[];
   }
   
 export interface ISetRoleResult{
@@ -52,7 +53,7 @@ export class RoleSelectionService {
       })
 
       const data = result.data;
-
+      //console.log("Consoleando data service", data.cognitoGroups.groups)
       return {
         roles: data.cognitoGroups.groups,
       };
@@ -62,7 +63,7 @@ export class RoleSelectionService {
     }
   }
 
-  
+
   /*NOT TESTED YET*/
   async SetRoleGroup(roleForm:ISelectRole):Promise<ISetRoleResult> {
     try {

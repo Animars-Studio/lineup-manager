@@ -5,7 +5,7 @@ import { useRoleSelection } from '../../hooks/useRoleSelection';
 
 export interface ISelectRole {
     name: string;
-    description?: string;
+    //description?: string;
   }
 
 //Select role initial state

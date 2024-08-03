@@ -4,8 +4,8 @@ import { ISelectRole } from "../pages/RoleSelection/RoleSelection";
 import { RoleSelectionService } from "../services/roleSelection.service";
 
 export type MappedRole = {
-    description: string | undefined;
     groupName: string;
+    description: string | undefined;
 };
 
 export const useRoleSelection = (selectRoleInitialForm: ISelectRole) => {
@@ -23,13 +23,18 @@ export const useRoleSelection = (selectRoleInitialForm: ISelectRole) => {
         try {
             const response = await roleSelectionService.GetRoleGroup();
             // Aqui es donde tenes que mapear la respuesta de la API
+            console.log('respuesta desde el hook', response)
             const mappedRoles = response.roles.map((role) => {
+                console.log("Imprimir roles",Object.values(role))
                 return {
+                    groupName: Object.values(role)[1] as string,
                     description: role.description,
-                    groupName: role.name,
                 };
             });
+            console.log("antes de setearlos", mappedRoles)
             setRolesList(mappedRoles);
+            console.log("despues de setearlos", mappedRoles)
+            //console.log('roles mapeados desde el hook', rolesList)
         } catch (error) {
             console.log(error);
         }
