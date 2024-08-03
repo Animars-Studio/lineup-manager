@@ -80,6 +80,10 @@ custom:
     platform: 'node'
     concurrency: 10
 
+  serverless-offline:
+    httpPort: 5000
+    lambdaPort: 5001
+
   isOffline: ${env:AM_IS_OFFLINE, "false"}
   offlineConfig:
     true:

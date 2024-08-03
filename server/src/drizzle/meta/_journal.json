@@ -50,6 +50,20 @@
       "when": 1721584391053,
       "tag": "0006_add_users_positions_table",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1722653933710,
+      "tag": "0007_users_to_many_teams",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1722655500755,
+      "tag": "0008_add_role_to_user_teams",
+      "breakpoints": true
     }
   ]
 }

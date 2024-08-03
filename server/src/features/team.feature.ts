@@ -4,20 +4,9 @@ import {
   TeamResult,
   User,
 } from "../generated/graphql";
+import { FileUpload, S3ClientService } from "../services/s3.service";
 import { TeamService } from "../services/team.service";
-import { UserService } from "../services/user.service";
-
-import { v4 as uuidv4 } from "uuid";
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
-import { Upload } from "@aws-sdk/lib-storage";
-
-export type FileUpload = {
-  fieldName: string;
-  filename: string;
-  mimetype: string;
-  encoding: string;
-  createReadStream: () => NodeJS.ReadStream;
-};
+import { UserService, UserTeamRole } from "../services/user.service";
 
 /**
  * This pattern involves creating an "orchestrator" or "facade" type classes
@@ -29,12 +18,12 @@ export class TeamFeature {
   private static instance: TeamFeature;
   private userService: UserService;
   private teamService: TeamService;
-  private s3Client: S3Client;
+  private s3ClientService: S3ClientService;
 
   constructor() {
     this.userService = UserService.getInstance();
     this.teamService = TeamService.getInstance();
-    this.s3Client = new S3Client({ region: process.env.COGNITO_REGION });
+    this.s3ClientService = S3ClientService.getInstance();
   }
 
   public static getInstance(): TeamFeature {
@@ -51,50 +40,66 @@ export class TeamFeature {
       return { error: { message: "User not found" } };
     }
 
-    // cast args.file to FileUpload
     if (!args.file) {
       return { error: { message: "Logo is required" } };
     }
 
     const { file } = args.file as { file: FileUpload };
 
-    console.log("[createTeam] file:", file);
-
     // upload logo to s3
-    let logoUrl = "";
-    const { createReadStream, filename, mimetype, encoding } = await file;
-    const stream = createReadStream();
-
-    const key = `uploads/${uuidv4()}-${filename}`;
-    const params = {
-      Bucket: process.env.S3_BUCKET_NAME,
-      Key: key,
-      Body: stream,
-      ContentType: mimetype,
-      ContentEncoding: encoding,
-    };
-
-    try {
-      const upload = new Upload({
-        client: this.s3Client,
-        params: params,
-      });
-      await upload.done();
-      logoUrl = `https://${process.env.S3_BUCKET_NAME}.s3.amazonaws.com/${key}`;
-    } catch (error) {
-      console.error("[uploadImage] error:", error);
-      throw new Error(`Failed to upload image. ${JSON.stringify(error)}`);
-    }
+    const logoUrl = await this.s3ClientService.uploadImage(file);
 
     // create team
     const team = await this.teamService.createTeam<Team>({
       ...args,
       logoUrl,
     });
+
     // assign team to user
-    await this.userService.updateUser<User>(args.userId, {
-      teamId: team.id,
-    });
+    await this.userService.assignUserToTeam<User>(
+      args.userId,
+      team.id,
+      "ADMIN"
+    );
+    return team;
+  }
+
+  public async addPlayerToTeam(
+    userId: string,
+    teamId: string,
+    invitedBy: string,
+    role: UserTeamRole
+  ): Promise<TeamResult> {
+    // check if user exists
+    const user = await this.userService.getUser<User>(userId);
+    if (!user) {
+      return { error: { message: "User not found" } };
+    }
+
+    // check if team exists
+    const team = await this.teamService.getTeam<Team>(teamId);
+    if (!team) {
+      return { error: { message: "Team not found" } };
+    }
+
+    // get the invitedBy user
+    const invitedByUser = await this.userService.getUser<User>(invitedBy);
+    if (!invitedByUser) {
+      return { error: { message: "Invited by user not found" } };
+    }
+
+    // check if the team has an ADMIN and the invitedBy matches the ADMIN
+    const teamAdmin = await this.userService.getAdminOfTeam<User>(teamId);
+    if (!teamAdmin || teamAdmin.id !== invitedBy) {
+      return { error: { message: "Unauthorized" } };
+    }
+
+    // assign user to team
+    const assignedTeam = await this.userService.assignUserToTeam<User>(
+      userId,
+      teamId,
+      role
+    );
     return team;
   }
 }
