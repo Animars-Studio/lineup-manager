@@ -84,37 +84,15 @@ export const useRoleSelection = (selectRoleInitialForm: ISelectRole) => {
                 console.log("ADMIN o COACH");
                 navigate.push("/create-team");
                 return;
+            } else {
+                //Navigate to dashboard
+                console.log("PLAYER");
+                navigate.push("/dashboard");
             }
-            //Navigate to dashboard
-            console.log("PLAYER");
-            navigate.push("/dashboard");
         } catch (error) {
             console.error("Error adding user group:", error);
         }
     };
-    /*
-    
-    const handleSubmit = async (event: FormEvent) => {
-            event.preventDefault();
-            try {
-                const response: LoginResponse | null = await loginService.adminVerification(loginForm);
-    
-                if (!response) {
-                    throw new Error('No response from server');
-                }
-    
-                //Save token in localStorage
-                localStorageService.logIn(response.message)
-                console.log("Login success")
-                //roleVerificationService.isAdmin()
-                //navigate to next component
-                navigate.push('/role-selection')
-    
-            } catch (error) {
-                console.error("Error during verifying admin: ", error);
-            }
-        }
-    */
     return {
         handleDisabled,
         handleChange,

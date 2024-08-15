@@ -75,11 +75,12 @@ export class RoleSelectionService {
 
           const data = result.data;
     
-          if (data.signup.error) {
-            throw new Error(data.signup.error.message);
+          //cambiar el signup.error por el que corresponda
+          if (data.addUserToGroup.error) {
+            throw new Error(data.addUserToGroup.error.message);
           }
           return {
-            result: data.signup.username,
+            result: data.addUserToGroup.result,
           };
     } catch (error) {
         throw new Error("Error while setting role");
