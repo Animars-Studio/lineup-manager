@@ -7,7 +7,16 @@ import {
 
 const ConfirmSignUpMutationDoc = gql`
   mutation ConfirmSignup($username: String!, $code: String!) {
-    confirmSignup(username: $username, code: $code)
+    confirmSignup(username: $username, code: $code) {
+    ... on GenericResult {
+      result
+    }
+    ... on CustomError {
+      error {
+        message
+      }
+    }
+  }
   }
 `;
 

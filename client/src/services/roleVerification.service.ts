@@ -2,22 +2,22 @@ import { jwtDecode } from "jwt-decode";
 import { LocalStorageService } from "./localStorage.service";
 
 export interface JwtPayload {
-  aud: string;
-  auth_time: number;
-  "cognito:groups": string[];
-  "cognito:username": string;
-  "custom:assuming_username": string;
-  email: string;
+  sub: string;
   email_verified: boolean;
+  "custom:assuming_username": string;
+  iss: string;
+  "cognito:username": string;
+  origin_jti: string;
+  aud: string;
   event_id: string;
+  token_use: string;
+  auth_time: number;
   exp: number;
   iat: number;
-  iss: string;
   jti: string;
-  origin_jti: string;
-  sub: string;
-  token_use: string;
+  email: string;
 }
+
 
 export class RoleVerificationService {
   private localStorageService: LocalStorageService;
@@ -30,21 +30,40 @@ export class RoleVerificationService {
     return jwtDecode(token);
   }
 
-  isAdmin() {
+  getUsername (){
     const token = this.localStorageService.getToken();
-    if (token) {
+        if (token) {
       const decoded = this.decodedToken(token);
-      return decoded["cognito:groups"].includes("ADMIN");
+      return decoded["cognito:username"]
     }
     return false;
   }
 
-  isSuperAdmin() {
+  getEmail (){
     const token = this.localStorageService.getToken();
-    if (token) {
+        if (token) {
       const decoded = this.decodedToken(token);
-      return decoded["cognito:groups"].includes("SUPER_ADMIN");
+      return decoded.email
     }
     return false;
   }
+
+  
+  // isAdmin() {
+  //   const token = this.localStorageService.getToken();
+  //   if (token) {
+  //     const decoded = this.decodedToken(token);
+  //     return decoded["cognito:groups"].includes("ADMIN");
+  //   }
+  //   return false;
+  // }
+
+  // isSuperAdmin() {
+  //   const token = this.localStorageService.getToken();
+  //   if (token) {
+  //     const decoded = this.decodedToken(token);
+  //     //return decoded["cognito:groups"].includes("SUPER_ADMIN");
+  //   }
+  //   return false;
+  // }
 }

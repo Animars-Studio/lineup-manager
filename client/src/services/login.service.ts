@@ -4,7 +4,16 @@ import { ILogin, LoginResponse } from "../pages/Authentication/Login/Login";
 
 const LoginMutationDoc = gql`
   mutation Login($username: String!, $password: String!) {
-    login(username: $username, password: $password)
+    login(username: $username, password: $password) {
+    ... on GenericResult {
+      result
+    }
+    ... on CustomError {
+      error {
+        message
+      }
+    }
+  }
   }
 `;
 
@@ -22,8 +31,6 @@ export class LoginService {
         variables: loginInitialForm,
       });
 
-      console.log("AdminVerification mutation: ", result);
-
       const data = result.data;
 
       if (data.login.error) {
@@ -31,7 +38,7 @@ export class LoginService {
       }
 
       return {
-        message: data.login,
+        message: data.login.result,
       };
     } catch (error) {
       console.log("Error Login Service >>>> ", error);
