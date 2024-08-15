@@ -11,6 +11,7 @@ import {
 import "./Login.css";
 import { useLogin } from "../../../hooks/useLogin";
 import { useLocation } from "react-router";
+import { Loader } from "../../../components/Loader";
 
 export interface ILogin {
   username: string;
@@ -41,6 +42,7 @@ export const Login: React.FC = () => {
     handleChange,
     handleSubmit,
     handleShowPasswordChange,
+    loading
   } = useLogin(loginInitialForm(state?.email));
 
   return (
@@ -81,9 +83,17 @@ export const Login: React.FC = () => {
               </IonCheckbox>
             </IonItem>
             <br />
+
+            {loading &&
+            <IonCardHeader className="center">
+              <IonCardTitle>
+                <Loader/>
+              </IonCardTitle>
+            </IonCardHeader>}
+
             <IonButton expand="block" type="submit">
               Ingresar
-            </IonButton>{" "}
+            </IonButton>
             <br />
           </form>
         </IonCardContent>

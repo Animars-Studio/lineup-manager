@@ -4,15 +4,16 @@ import {
 } from '@ionic/react';
 import { useRegister } from '../../../hooks/useRegister';
 import { useHistory } from "react-router-dom";
-import {arrowBackCircleOutline} from 'ionicons/icons';
+import { arrowBackCircleOutline } from 'ionicons/icons';
+import { Loader } from '../../../components/Loader';
 
 export interface IRegister {
-    email:string
-    password:string 
+    email: string
+    password: string
 }
 export interface RegisterResponse {
-    id:number
-    username:string 
+    id: number
+    username: string
 }
 
 // Register form initial state
@@ -33,14 +34,15 @@ export const Register: React.FC = () => {
         showPassword1,
         handleChange,
         handleShowPasswordChange1,
-        handleSubmit
+        handleSubmit,
+        loading
     } = useRegister(registerInitialForm);
 
     return (
         <div className='container'>
             <IonCard className='ion-card'>
 
-                
+
                 <IonButton fill="clear" onClick={backNavigation} >
                     <IonIcon slot="start" icon={arrowBackCircleOutline}></IonIcon>
                     Regresar
@@ -78,6 +80,12 @@ export const Register: React.FC = () => {
                                 onIonChange={handleShowPasswordChange1}
                                 slot="end">Mostrar contraseña</IonCheckbox>
                         </IonItem><br />
+                        {loading &&
+                            <IonCardHeader className="center">
+                                <IonCardTitle>
+                                    <Loader />
+                                </IonCardTitle>
+                            </IonCardHeader>}
 
                         <IonButton expand="block" type='submit'>Registrar</IonButton> <br />
                     </IonCardContent>

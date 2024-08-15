@@ -2,6 +2,7 @@ import {
     IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle,IonItem,IonSelect,IonSelectOption,
 } from '@ionic/react';
 import { useRoleSelection } from '../../hooks/useRoleSelection'; 
+import { Loader } from '../../components/Loader';
 
 export interface ISelectRole {
     username: string;
@@ -15,7 +16,7 @@ const selectRoleInitialForm: ISelectRole = {
   };
 
 export const RoleSelection: React.FC = () => {
-  const { handleDisabled, handleChange, handleSubmit, roleForm, rolesList } =
+  const { handleDisabled, handleChange, handleSubmit, roleForm, rolesList,loading } =
     useRoleSelection(selectRoleInitialForm);
 
   return (
@@ -44,9 +45,15 @@ export const RoleSelection: React.FC = () => {
               </IonSelect>
             </IonItem>
             <br />
+            {loading &&
+                            <IonCardHeader className="center">
+                                <IonCardTitle>
+                                    <Loader />
+                                </IonCardTitle>
+                            </IonCardHeader>}
             <IonButton expand="block" type="submit" disabled={handleDisabled()}>
               Confirm
-            </IonButton>{" "}
+            </IonButton>
             <br />
           </IonCardContent>
         </form>

@@ -24,6 +24,7 @@ export const useConfirmationCode = ({
   ]);
 
   const [inputState, setInputState] = useState<"fill" | "clear">("fill");
+  const [loading, setLoading] = useState<boolean>(false)
 
   useEffect(() => {
     setAuthConfirmationInputs(authConfirmationInputs);
@@ -101,20 +102,23 @@ export const useConfirmationCode = ({
     const values = authConfirmationInputs.map((input) => input.value);
     const code = values.join("");
 
+    setLoading(true)
     try {
       const response: IConfirmationCodeResponse | null =
-        await confirmationCodeService.verifyCode({
-          username: user,
-          code,
-        });
+      await confirmationCodeService.verifyCode({
+        username: user,
+        code,
+      });
       if (!response) {
         throw new Error("No response from server");
       }
-
+      
+      setLoading(false)
       navigate.push("/login", {
         email,
       });
     } catch (error) {
+      setLoading(false)
       console.error("Error during login:", error);
     }
   };
@@ -125,5 +129,6 @@ export const useConfirmationCode = ({
     handleChange,
     onAuthConfirmationInputChange,
     onAuthConfirmationInputClear,
+    loading
   };
 };

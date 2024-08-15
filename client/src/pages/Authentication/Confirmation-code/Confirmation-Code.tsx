@@ -8,33 +8,35 @@ import { arrowBackCircleOutline } from 'ionicons/icons';
 import { useHistory, useLocation } from 'react-router-dom';
 import { FormEvent, useEffect, useRef, useState } from 'react';
 import { useConfirmationCode } from '../../../hooks/useConfirmationCode';
+import { Loader } from '../../../components/Loader';
 
 export interface VerifyCodeArgs {
-    username:string
-    code:string
+    username: string
+    code: string
 }
 export interface IConfirmationCodeResponse {
-    message:string
+    message: string
 }
 
 export const ConfirmationCode: React.FC = () => {
-   
-const location = useLocation()
-const state: {
-    email:string
-    username: string;
-} = location.state as any
 
-const {
-    authConfirmationInputs,
-    handleSubmit,
-    handleChange,
-    onAuthConfirmationInputChange,
-    onAuthConfirmationInputClear
-} = useConfirmationCode({
-    email: state?.email,
-    username: state?.username
-})
+    const location = useLocation()
+    const state: {
+        email: string
+        username: string;
+    } = location.state as any
+
+    const {
+        authConfirmationInputs,
+        handleSubmit,
+        handleChange,
+        onAuthConfirmationInputChange,
+        onAuthConfirmationInputClear,
+        loading
+    } = useConfirmationCode({
+        email: state?.email,
+        username: state?.username
+    })
 
     const navigate = useHistory();
     const backNavigation = (): void => {
@@ -83,6 +85,13 @@ const {
                                 })}
                             </IonRow>
                         </IonGrid> <br />
+                        
+                        {loading &&
+                            <IonCardHeader className="center">
+                                <IonCardTitle>
+                                    <Loader />
+                                </IonCardTitle>
+                            </IonCardHeader>}
 
                         <IonButton expand="block" type='submit' >Confirmar Administrador</IonButton> <br />
                     </form>

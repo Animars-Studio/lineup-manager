@@ -23,6 +23,7 @@ export const useRoleSelection = (selectRoleInitialForm: ISelectRole) => {
     //Saving roles response from service.
     const [rolesList, setRolesList] = useState<MappedRole[]>([]);
 
+    const [loading, setLoading] = useState<boolean>(false)
     const localStorageService = new LocalStorageService();
     const roleVerificationService = new RoleVerificationService(localStorageService);
 
@@ -73,6 +74,7 @@ export const useRoleSelection = (selectRoleInitialForm: ISelectRole) => {
         // ver que role tiene (te deje comment alli)
         // 3. Para checkear el role del usuario siempre usemos el servicio
         // que tenes creado para isAdmin, isCoach, isPlayer etc.
+        setLoading(true)
         try {
             console.log(roleForm);
             //Navigate to create team component
@@ -80,6 +82,7 @@ export const useRoleSelection = (selectRoleInitialForm: ISelectRole) => {
             if (!response) {
                 throw new Error('No response from server');
             }
+            setLoading(false)
             if (roleForm.groupName === "COACH" || roleForm.groupName === "ADMIN") {
                 console.log("ADMIN o COACH");
                 navigate.push("/create-team");
@@ -90,6 +93,7 @@ export const useRoleSelection = (selectRoleInitialForm: ISelectRole) => {
                 navigate.push("/dashboard");
             }
         } catch (error) {
+            setLoading(false)
             console.error("Error adding user group:", error);
         }
     };
@@ -98,7 +102,8 @@ export const useRoleSelection = (selectRoleInitialForm: ISelectRole) => {
         handleChange,
         handleSubmit,
         roleForm,
-        rolesList
+        rolesList,
+        loading
     }
 
 }

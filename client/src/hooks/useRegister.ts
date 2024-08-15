@@ -23,6 +23,7 @@ export const useRegister = (registerInitialForm: IRegister) => {
   };
 
   const [showPassword1, setShowPassword1] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false)
 
   //setting checkbox to true to show password
   const handleShowPasswordChange1 = (event: CustomEvent) => {
@@ -31,6 +32,7 @@ export const useRegister = (registerInitialForm: IRegister) => {
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
+    setLoading(true)
     try {
       const response: RegisterResponse | null =
         await registerService.CreateAdmin(registerForm);
@@ -38,13 +40,14 @@ export const useRegister = (registerInitialForm: IRegister) => {
       if (!response) {
         throw new Error("No response from server");
       }
-
+      setLoading(false)
       //Navigate to next component
       navigate.push("/confirmation-code", {
         email: registerForm.email,
         username: response.username,
       });
     } catch (error) {
+      setLoading(false)
       console.error("Error during creating admin:", error);
     }
   };
@@ -55,5 +58,6 @@ export const useRegister = (registerInitialForm: IRegister) => {
     handleChange,
     handleShowPasswordChange1,
     handleSubmit,
+    loading
   };
 };

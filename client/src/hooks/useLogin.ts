@@ -23,6 +23,7 @@ export const useLogin = (loginInitialForm: ILogin) => {
     };
 
     const [showPassword, setShowPassword] = useState<boolean>(false)
+    const [loading, setLoading] = useState<boolean>(false)
 
     //setting checkbox to true to show password
     const handleShowPasswordChange = (event: CustomEvent) => {
@@ -31,21 +32,21 @@ export const useLogin = (loginInitialForm: ILogin) => {
 
     const handleSubmit = async (event: FormEvent) => {
         event.preventDefault();
+        setLoading(true)
         try {
             const response: LoginResponse | null = await loginService.adminVerification(loginForm);
 
             if (!response) {
                 throw new Error('No response from server');
             }
-
-            //Save token in localStorage
             localStorageService.logIn(response.message)
+            setLoading(false)
             console.log("Login success")
-            //roleVerificationService.isAdmin()
-            //navigate to next component
+            
             navigate.push('/role-selection')
-
+            
         } catch (error) {
+            setLoading(false)
             console.error("Error during verifying admin: ", error);
         }
     }
@@ -55,7 +56,8 @@ export const useLogin = (loginInitialForm: ILogin) => {
         showPassword,
         handleChange,
         handleSubmit,
-        handleShowPasswordChange
+        handleShowPasswordChange,
+        loading
     }
 
 }
